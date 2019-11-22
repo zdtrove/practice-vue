@@ -4,6 +4,7 @@
         <v-btn text to="/"><v-toolbar-title>WANTEDLY</v-toolbar-title></v-btn>
         
         <v-spacer></v-spacer>
+        <v-btn text to="/tasks">tasks</v-btn>
         <v-btn text to="/signup">sign up</v-btn>
         <v-btn text to="/login">login</v-btn>
     </v-app-bar>
