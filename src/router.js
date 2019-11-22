@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import HomePage from '../views/HomePage.vue';
+import HomePage from './views/HomePage';
 
 Vue.use(VueRouter)
 
@@ -13,18 +13,16 @@ const routes = [
     {
         path: '/signup',
         name: 'signup',
-        component: () => import('../views/SignupPage.vue')
+        component: () => import('./views/SignupPage')
     },
     {
         path: '/login',
         name: 'login',
-        component: () => import('../views/LoginPage.vue')
+        component: () => import('./views/LoginPage')
     }
 ]
 
-const router = new VueRouter({
+export default new VueRouter({
     mode: 'history',
     routes
 });
-
-export default router;

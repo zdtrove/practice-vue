@@ -1,6 +1,8 @@
 <template>
     <v-app>
-        <router-view />
+        <component :is="layout">
+            <router-view :layout.sync="layout" />
+        </component>
     </v-app>
 </template>
 
@@ -9,6 +11,11 @@
         name: "App",
         components: {
            
+        },
+        data() {
+            return {
+                layout: `div`
+            };
         }
     };
 </script>
