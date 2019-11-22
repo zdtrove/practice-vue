@@ -1,24 +1,30 @@
 <template>
     <div id="app">
-        <div class="container">
+        <!-- <div class="container">
             <AddTodo />
             <FilterTodos />
             <Todos />
-        </div>
+        </div> -->
+        <ul>
+            <li><router-link to="/">Home</router-link></li>
+            <li><router-link to="/tasks">Tasks</router-link></li>
+            <li><router-link to="/user/123">User</router-link></li>
+        </ul>
+        <router-view></router-view>
     </div>
 </template>
 
 <script>
-import Todos from './components/Todos';
-import AddTodo from './components/AddTodo';
-import FilterTodos from './components/FilterTodos';
+// import Todos from './components/Todos';
+// import AddTodo from './components/AddTodo';
+// import FilterTodos from './components/FilterTodos';
 
 export default {
     name: 'app',
     components: {
-        Todos,
-        AddTodo,
-        FilterTodos
+        // Todos,
+        // AddTodo,
+        // FilterTodos
     } 
 }
 </script>
