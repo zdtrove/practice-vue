@@ -3,7 +3,7 @@
         <v-card-title>Tasks List</v-card-title>
         <v-card-text>Double click to update color task</v-card-text>
         <v-list shaped>
-            <v-list-item-group v-model="model" multiple>
+            <v-list-item-group multiple>
                 <v-list-item
                     @dblclick="onDblClick(task)" 
                     :key="task.id" 
