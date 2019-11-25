@@ -1,6 +1,6 @@
 <template>
     <v-content>
-        <v-container class="fill-height" fluid>
+        <v-container class="fill-height loginsignuplayout" fluid>
             <v-row align="center" justify="center">
                 <languagePicker />
                 <slot />
@@ -10,19 +10,11 @@
 </template>
 
 <script>
-    import languagePicker from '../../components/languagePicker';
+    import LanguagePicker from '../../components/languagepicker';
     export default {
         name: 'LoginOrSignupLayout',
         components: {
-            languagePicker
+            LanguagePicker
         }
     };
 </script>
-
-<style scoped>
-    #languagePicker {
-        position: fixed;
-        top: 30px;
-        right: 30px;
-    }
-</style>

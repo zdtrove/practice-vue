@@ -1,0 +1,15 @@
+.wrapp {
+    border: 1px solid black;
+    padding: 5px;
+}
+.loginsignuplayout #languagePicker {
+    position: fixed;
+    top: 30px;
+    right: 30px;
+}
+.en { 
+    margin-right: 15px; 
+}
+.is-complete {
+    font-weight: bold;
+}

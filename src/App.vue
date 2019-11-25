@@ -7,11 +7,10 @@
 </template>
 
 <script>
+    import '../public/assets/scss/style.scss';
+    import '../public/assets/css/style.css';
     export default {
         name: "App",
-        components: {
-           
-        },
         data() {
             return {
                 layout: `div`
@@ -19,9 +18,3 @@
         }
     };
 </script>
-
-<style>
-    header {
-        max-height: 64px;
-    }
-</style>

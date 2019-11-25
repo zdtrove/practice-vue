@@ -40,9 +40,3 @@
         }
     };
 </script>
-
-<style scoped>
-    .is-complete {
-        font-weight: bold;
-    }
-</style>

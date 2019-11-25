@@ -21,7 +21,7 @@
 </template>
 
 <script>
-    import LoginOrSignupLayout from '../views/layouts/LoginOrSignupLayout';
+    import LoginOrSignupLayout from '../../layouts/LoginOrSignupLayout';
     export default {
         name: 'LoginPage',
         created() {
@@ -29,7 +29,3 @@
         }
     };
 </script>
-
-<style>
-
-</style>

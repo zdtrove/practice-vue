@@ -9,8 +9,7 @@
 </template>
 
 <script>
-    import DashboardLayout from '../views/layouts/DashboardLayout';
-    import '../assets/scss/style.scss';
+    import DashboardLayout from '../../layouts/DashboardLayout';
     export default {
         name: 'homepage',
         created() {
@@ -18,7 +17,3 @@
         }
     }
 </script>
-
-<style scoped>
-    
-</style>

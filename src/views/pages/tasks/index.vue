@@ -7,8 +7,8 @@
 </template>
 
 <script>
-    import DashboardLayout from '../views/layouts/DashboardLayout';
-    import Tasks from '../components/Tasks/Tasks';
+    import DashboardLayout from '../../layouts/DashboardLayout';
+    import Tasks from '../../../components/tasks';
     export default {
         name: 'app',
         components: {
@@ -19,7 +19,3 @@
         }
     }
 </script>
-
-<style>
-
-</style>

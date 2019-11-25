@@ -1,4 +1,4 @@
-import HomePage from '../views/HomePage';
+import HomePage from '../views/pages/home';
 
 export default [
     {
@@ -9,16 +9,16 @@ export default [
     {
         path: '/signup',
         name: 'signup',
-        component: () => import('../views/SignupPage')
+        component: () => import('../views/pages/signup')
     },
     {
         path: '/login',
         name: 'login',
-        component: () => import('../views/LoginPage')
+        component: () => import('../views/pages/login')
     },
     {
         path: '/tasks',
         name: 'tasks',
-        component: () => import('../views/TaskPage')
+        component: () => import('../views/pages/tasks')
     }
 ];

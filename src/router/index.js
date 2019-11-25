@@ -2,7 +2,7 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import routes from './routes';
 import store from '../store';
-import { i18n } from '../plugins/i18n.js';
+import { i18n } from '../plugins';
 
 Vue.use(VueRouter);
 

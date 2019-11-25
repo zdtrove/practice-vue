@@ -1,7 +1,7 @@
 <template>
     <div id="languagePicker">
-        <img src="../assets/images/en.png" @click="changeLanguage(languages[0])" class="en" />
-        <img src="../assets/images/vi.png" @click="changeLanguage(languages[1])" />
+        <img src="../../../public/assets/images/en.png" @click="changeLanguage(languages[0])" class="en" />
+        <img src="../../../public/assets/images/vi.png" @click="changeLanguage(languages[1])" />
     </div>
 </template>
 <script>
@@ -27,7 +27,3 @@
         }
     };
 </script>
-
-<style>
-    .en { margin-right: 15px; }
-</style>
