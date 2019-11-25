@@ -1,7 +1,9 @@
 <template>
     <v-container>
         <v-row>
-            <h1>{{ $t('homepage') }}</h1>
+            <div class="wrapp">
+                <h1 class="title">{{ $t('homepage') }}</h1>
+            </div>
         </v-row>
     </v-container>
 </template>
@@ -17,6 +19,11 @@
     }
 </script>
 
-<style>
-
+<style lang="scss" scoped>
+    .wrapp {
+        background: yellow;
+        .title {
+            color: red;
+        }
+    }
 </style>
