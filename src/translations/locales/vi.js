@@ -18,5 +18,9 @@ export default {
 		passwordConfirmPlaceholder: 'Xác nhận mật khẩu',
 		signupButton: 'Đăng ký',
 		cancelButton: 'Hủy'
+	},
+	callApi: {
+		title: 'Danh sách công việc',
+		message: 'Click đúp chuột để tô đậm công việc và click vào icon để xóa công việc'
 	}
 };

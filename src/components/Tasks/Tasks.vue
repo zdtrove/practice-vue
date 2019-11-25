@@ -1,7 +1,7 @@
 <template>
     <v-card class="mx-auto" max-width="500">
-        <v-card-title>Tasks List</v-card-title>
-        <v-card-text>Double click to update color task</v-card-text>
+        <v-card-title>{{ $t('callApi.title') }}</v-card-title>
+        <v-card-text>{{ $t('callApi.message') }}</v-card-text>
         <v-list shaped>
             <v-list-item-group multiple>
                 <v-list-item

@@ -18,5 +18,9 @@ export default {
 		passwordConfirmPlaceholder: 'Password Confirm',
 		signupButton: 'sign up',
 		cancelButton: 'cancel'
+	},
+	callApi: {
+		title: 'Tasks list',
+		message: 'Double click to update color task anh click icon to delete task'
 	}
 };
