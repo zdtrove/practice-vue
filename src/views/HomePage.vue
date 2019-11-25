@@ -10,7 +10,7 @@
 
 <script>
     import DashboardLayout from '../views/layouts/DashboardLayout';
-    
+    import '../assets/scss/style.scss';
     export default {
         name: 'homepage',
         created() {
@@ -19,11 +19,6 @@
     }
 </script>
 
-<style lang="scss" scoped>
-    .wrapp {
-        background: yellow;
-        .title {
-            color: red;
-        }
-    }
+<style scoped>
+    
 </style>
