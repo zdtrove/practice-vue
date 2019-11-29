@@ -4,8 +4,8 @@
         <v-btn text to="/"><v-toolbar-title>WANTEDLY</v-toolbar-title></v-btn>
         <v-spacer></v-spacer>
         <v-btn text><LanguagePicker /></v-btn>
-        <v-btn text to="/signup">{{ $t('headerSignUp') }}</v-btn>
-        <v-btn text to="/login">{{ $t('headerLogin') }}</v-btn>
+        <v-btn v-if="!this.$store.getters.isLoggedIn" text to="/signup">{{ $t('headerSignUp') }}</v-btn>
+        <v-btn v-if="!this.$store.getters.isLoggedIn" text to="/login">{{ $t('headerLogin') }}</v-btn>
     </v-app-bar>
 </template>
 

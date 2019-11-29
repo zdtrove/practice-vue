@@ -12,10 +12,6 @@
                                 {{ successMsg }}
                                 <v-icon class="iconDelete" @click="success = !success">delete</v-icon>
                             </v-alert>
-                            <v-alert color="success" :value="successFb">
-                                {{ successFbMsg }}
-                                <v-icon class="iconDelete" @click="successFb = !successFb">delete</v-icon>
-                            </v-alert>
                             <v-alert color="error" :value="error">
                                 <p v-for="(err, index) in errorMsg" v-bind:key="index">{{ err[0] }}</p>
                                 <v-icon class="iconDelete" @click="error = !error">delete</v-icon>
@@ -57,19 +53,23 @@
                 </v-card>
             </v-col>
         </v-row>
+        <Loading v-if="loading" />
     </v-container>
 </template>
 
 <script>
     import DashboardLayout from '../../layouts/DashboardLayout';
+    import Loading from '../../../components/loading';
     export default {
         name: 'SignupPage',
+        components: {
+            Loading
+        },
         data: (data) => ({
+            loading: false,
             validForm: true,
             success: false,
             successMsg: '',
-            successFb: false,
-            successFbMsg: '',
             error: false,
             errorMsg: '',
             errorFb: false,
@@ -92,39 +92,44 @@
             },
         },
         methods: {
-            fbSignup() {
-                new Promise(() => {
-                    window.FB.login(response => {
-                        if (response.authResponse) {
-                            window.FB.api('/me', 'GET', { fields: 'id,name,email' }, user => {
-                                this.$store.dispatch("SIGNUP_FACEBOOK", {
-                                    headers: {
-                                        'Access-Control-Allow-Origin': '*',
-                                    },
-                                    type: 'profile',
-                                    register_type: 'facebook',
-                                    facebook: user.id,
-                                    email: user.email,
-                                    name: user.name,
-                                    azure_token: response.authResponse.accessToken
-                                }).then(result => {
-                                    console.log(result);
-                                    console.log('register success');
-                                    this.successFb = true;
-                                    this.successFbMsg = result.data.message;
-                                })
-                                .catch((error) => {
-                                    console.log(error);
-                                    console.log('register error');
-                                    this.errorFb = true;
-                                    this.errorFbMsg = error.data.error.message;
+            async fbSignup() {
+                if (this.$store.getters.isLoggedIn) {
+                    this.$router.push('/profile');
+                } else {
+                    new Promise(() => {
+                        window.FB.login(response => {
+                            this.loading = true;
+                            if (response.authResponse) {
+                                window.FB.api('/me', 'GET', { fields: 'id,name,email' }, user => {
+                                    this.$store.dispatch("SIGNUP_FACEBOOK", {
+                                        headers: {
+                                            'Access-Control-Allow-Origin': '*',
+                                        },
+                                        type: 'profile',
+                                        register_type: 'facebook',
+                                        facebook: user.id,
+                                        email: user.email,
+                                        name: user.name,
+                                        azure_token: response.authResponse.accessToken
+                                    }).then(() => {
+                                        this.loading = false;
+                                        this.$router.push('/profile');
+                                    })
+                                    .catch((error) => {
+                                        this.loading = false;
+                                        console.log(error);
+                                        console.log('register error');
+                                        this.errorFb = true;
+                                        this.errorFbMsg = error.data.error.message;
+                                    });
                                 });
-                            });
-                        }
+                            }
+                        });
                     });
-                });
+                }
             },
             signup() {
+                this.loading = true;
                 this.$store.dispatch("SIGNUP", {
                     headers: {
                         'Access-Control-Allow-Origin': '*',
@@ -137,10 +142,12 @@
                     name: 'My Profile'
                 })
                 .then((result) => {
+                    this.loading = false;
                     this.success = true;
                     this.successMsg = result.data.message;
                 })
                 .catch((error) => {
+                    this.loading = false;
                     this.errorMsg = error.data.error.message;
                     this.error = true;
                 });
@@ -148,6 +155,9 @@
         },
         created() {
             this.$emit(`update:layout`, DashboardLayout);
+            if (this.$store.getters.isLoggedIn) {
+                this.$router.push('/profile');
+            }
         }
     };
 </script>

@@ -15,8 +15,9 @@ export default {
         login_error(state){
             state.status = 'error';
         },
-        signup_success(state){
+        signup_success(state, token){
             state.status = 'success';
+            state.token = token;
         },
         signup_error(state){
             state.status = 'error';
@@ -81,7 +82,9 @@ export default {
                 axios.post(`account/register`, payload)
                 .then(({data, status}) => {
                     if (status === 201) {
-                        commit('signup_success', data);
+                        const token = data.data.token;
+                        localStorage.setItem('token', token);
+                        commit('signup_success', token);
                         resolve(data);
                     }
                 })

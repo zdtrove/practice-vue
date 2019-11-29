@@ -1,9 +1,9 @@
 <template>
-    <div>Search Job</div>
+    <div>Page Not Found</div>
 </template>
 
 <script>
     export default {
-        name: 'searchjob',
+        name: 'pageNotFound',
     };
 </script>

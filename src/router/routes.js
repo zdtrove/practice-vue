@@ -17,11 +17,15 @@ export default [
         component: () => import('../views/pages/login')
     },
     {
-        path: '/searchjob',
-        name: 'searchjob',
-        component: () => import('../views/pages/searchjob'),
+        path: '/profile',
+        name: 'profile',
+        component: () => import('../views/pages/profile'),
         meta: { 
             requiresAuth: true
         }
+    },
+    { 
+        path: '*', 
+        component: () => import('../views/pages/notfound')
     }
 ];

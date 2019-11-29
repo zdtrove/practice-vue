@@ -87,7 +87,7 @@
                 });
             },
             loginFb() {
-                new Promise((resolve, reject) => {
+                new Promise(() => {
                     window.FB.login(response => {
                         if (response.authResponse) {
                             window.FB.api('/me', 'GET', { fields: 'id,name,email' }, user => {
@@ -101,17 +101,14 @@
                                     email: user.email,
                                     name: user.name,
                                     azure_token: response.authResponse.accessToken
-                                }).then(result => {
-                                    console.log(result);
-                                    console.log('login success');
-                                    resolve(result);
+                                }).then(() => {
+                                    this.$router.push('/profile');
                                 })
                                 .catch((error) => {
                                     console.log(error);
                                     console.log('login error');
                                     this.errorFb = true;
                                     this.errorFbMsg = error.data.error.message;
-                                    reject(error);
                                 });
                             });
                         }
@@ -122,7 +119,7 @@
         created() {
             this.$emit(`update:layout`, DashboardLayout);
             if (this.$store.getters.isLoggedIn) {
-                this.$router.push('/searchjob');
+                this.$router.push('/profile');
             }
         }
     };
