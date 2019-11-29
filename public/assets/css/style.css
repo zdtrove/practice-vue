@@ -13,3 +13,8 @@
 .is-complete {
     font-weight: bold;
 }
+
+/* LOGIN */
+.iconDelete {
+    float: right;
+}

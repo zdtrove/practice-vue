@@ -17,8 +17,11 @@ export default [
         component: () => import('../views/pages/login')
     },
     {
-        path: '/tasks',
-        name: 'tasks',
-        component: () => import('../views/pages/tasks')
+        path: '/searchjob',
+        name: 'searchjob',
+        component: () => import('../views/pages/searchjob'),
+        meta: { 
+            requiresAuth: true
+        }
     }
 ];
