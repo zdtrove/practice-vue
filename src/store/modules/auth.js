@@ -8,19 +8,15 @@ export default {
         isLoggedIn: state => !!state.token
     },
     mutations: {
-        login_success(state, token){
+        auth_success(state, token) {
             state.status = 'success';
             state.token = token;
         },
-        login_error(state){
+        auth_error(state) {
             state.status = 'error';
         },
-        signup_success(state, token){
-            state.status = 'success';
-            state.token = token;
-        },
-        signup_error(state){
-            state.status = 'error';
+        logout_success(state) {
+            state.token = '';
         }
     },
     actions: {
@@ -31,31 +27,30 @@ export default {
                     if (status === 200) {
                         const token = data.data.token;
                         localStorage.setItem('token', token);
-                        commit('login_success', token);
+                        commit('auth_success', token);
                         resolve(true);
                     }
                 })
                 .catch(error => {
-                    commit('login_error');
+                    commit('auth_error');
                     localStorage.removeItem('token');
                     reject(error.response);
                 });
             });
         },
         LOGIN_FACEBOOK: ({commit}, payload) => {
-            console.log(payload);
             return new Promise((resolve, reject) => {
                 axios.post(`account/login`, payload)
                 .then(({data, status}) => {
                     if (status === 200) {
                         const token = data.data.token;
                         localStorage.setItem('token', token);
-                        commit('login_success', token);
+                        commit('auth_success', token);
                         resolve(true);
                     }
                 })
                 .catch(error => {
-                    commit('login_error');
+                    commit('auth_error');
                     localStorage.removeItem('token');
                     reject(error.response);
                 });
@@ -66,33 +61,55 @@ export default {
                 axios.post(`account/register`, payload)
                 .then(({data, status}) => {
                     if (status === 201) {
-                        commit('signup_success', data);
+                        commit('auth_success', data);
                         resolve(data);
                     }
                 })
                 .catch(error => {
-                    commit('signup_error');
+                    commit('auth_error');
                     reject(error.response);
                 });
             });
         },
         SIGNUP_FACEBOOK: ({commit}, payload) => {
-            console.log(payload);
             return new Promise((resolve, reject) => {
                 axios.post(`account/register`, payload)
                 .then(({data, status}) => {
                     if (status === 201) {
                         const token = data.data.token;
                         localStorage.setItem('token', token);
-                        commit('signup_success', token);
+                        commit('auth_success', token);
                         resolve(data);
                     }
                 })
                 .catch(error => {
-                    commit('signup_error');
+                    commit('auth_error');
                     reject(error.response);
                 });
             });
-        }
+        },
+        LOGOUT: ({commit}, payload) => {
+            return new Promise((resolve, reject) => {
+                axios.get(`account/logout`, payload)
+                .then(({data, status}) => {
+                    if (status === 200) {
+                        commit('logout_success')
+                        localStorage.removeItem('token')
+                        resolve(data);
+                    }
+                })
+                .catch(error => {
+                    console.log(error.response);
+                    reject(error.response);
+                });
+            });
+        },
+        LOGOUT_EXPIRED: ({commit}) => {
+            return new Promise((resolve) => {
+                commit('logout_success')
+                localStorage.removeItem('token')
+                resolve(true);
+            });
+        },
     }
 }

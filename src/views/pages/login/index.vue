@@ -42,14 +42,21 @@
                 </v-card>
             </v-col>
         </v-row>
+        <Loading v-if="loading" />
     </v-container>
 </template>
 
 <script>
     import DashboardLayout from '../../layouts/DashboardLayout';
+    import Loading from '../../../components/loading';
+    import { TIMEOUT_MESSAGE } from '../../../constants';
     export default {
         name: 'LoginPage',
+        components: {
+            Loading
+        },
         data: (data) => ({
+            loading: false,
             validForm: true,
             error: false,
             errorMsg: '',
@@ -67,6 +74,7 @@
         }),
         methods: {
             login() {
+                this.loading = true;
                 this.$store.dispatch("LOGIN", {
                     headers: {
                         'Access-Control-Allow-Origin': '*',
@@ -77,18 +85,22 @@
                     password: this.password
                 })
                 .then(() => {
-                    this.$router.push('/searchjob');
+                    this.loading = false;
+                    this.$router.push('/profile');
                 })
                 .catch(error => {
-                    this.error = true;
+                    this.loading = false;
                     this.errorMsg = error.data.error.message;
-                    console.log(this.error);
-                    console.log(this.errorMsg);
+                    this.error = true;
+                    setTimeout(() => {
+                        this.error = false;
+                    }, TIMEOUT_MESSAGE);
                 });
             },
             loginFb() {
                 new Promise(() => {
                     window.FB.login(response => {
+                        this.loading = true;
                         if (response.authResponse) {
                             window.FB.api('/me', 'GET', { fields: 'id,name,email' }, user => {
                                 this.$store.dispatch("LOGIN_FACEBOOK", {
@@ -102,13 +114,16 @@
                                     name: user.name,
                                     azure_token: response.authResponse.accessToken
                                 }).then(() => {
+                                    this.loading = false;
                                     this.$router.push('/profile');
                                 })
                                 .catch((error) => {
-                                    console.log(error);
-                                    console.log('login error');
-                                    this.errorFb = true;
+                                    this.loading = false;
                                     this.errorFbMsg = error.data.error.message;
+                                    this.errorFb = true;
+                                    setTimeout(() => {
+                                        this.errorFb = false;
+                                    }, TIMEOUT_MESSAGE);
                                 });
                             });
                         }

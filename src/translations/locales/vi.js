@@ -2,6 +2,7 @@ export default {
     homepage: 'Chào mừng đến với Wantedly',
     headerLogin: 'Đăng nhập',
     headerSignUp: 'Đăng ký',
+    headerLogout: 'Đăng xuất',
     login: {
         titleForm: 'Đăng nhập',
         usernamePlaceholder: 'Tên đăng nhập',
@@ -29,5 +30,8 @@ export default {
             emailError: 'Email sai định dạng',
             minPass: 'Độ dài tối thiểu là 6 ký tự'
         }
+    },
+    logout: {
+        close: 'Đóng'
     }
 };

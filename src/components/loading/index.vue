@@ -1,5 +1,5 @@
 <template>
-    <div class="wrapp"><div class="loading"></div></div>
+    <div class="wrapp-loading"><div class="loading"></div></div>
 </template>
 
 <script>

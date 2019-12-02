@@ -60,6 +60,7 @@
 <script>
     import DashboardLayout from '../../layouts/DashboardLayout';
     import Loading from '../../../components/loading';
+    import { TIMEOUT_MESSAGE } from '../../../constants';
     export default {
         name: 'SignupPage',
         components: {
@@ -117,10 +118,11 @@
                                     })
                                     .catch((error) => {
                                         this.loading = false;
-                                        console.log(error);
-                                        console.log('register error');
-                                        this.errorFb = true;
                                         this.errorFbMsg = error.data.error.message;
+                                        this.errorFb = true;
+                                        setTimeout(() => {
+                                            this.errorFb = false;
+                                        }, TIMEOUT_MESSAGE);
                                     });
                                 });
                             }
@@ -143,13 +145,19 @@
                 })
                 .then((result) => {
                     this.loading = false;
-                    this.success = true;
                     this.successMsg = result.data.message;
+                    this.success = true;
+                    setTimeout(() => {
+                        this.success = false;
+                    }, TIMEOUT_MESSAGE);
                 })
                 .catch((error) => {
                     this.loading = false;
                     this.errorMsg = error.data.error.message;
                     this.error = true;
+                    setTimeout(() => {
+                        this.error = false;
+                    }, TIMEOUT_MESSAGE);
                 });
             }
         },

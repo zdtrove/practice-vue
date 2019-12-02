@@ -2,6 +2,7 @@ export default {
     homepage: 'Welcome to Wantedly',
     headerLogin: 'Login',
     headerSignUp: 'Sign up',
+    headerLogout: 'Logout',
     login: {
         titleForm: 'Login Form',
         usernamePlaceholder: 'Login',
@@ -30,5 +31,8 @@ export default {
             emailError: 'Invalid e-mail',
             minPass: 'Min lengt is 6 characters'
         }
+    },
+    logout: {
+        close: 'Close'
     }
 };
