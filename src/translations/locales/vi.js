@@ -11,6 +11,7 @@ export default {
         signupButton: 'Đăng ký',
         cancelButton: 'Hủy',
         loginButtonFacebook: 'Đăng nhập bằng Facebook',
+        loginButtonGoogle: 'Đăng nhập bằng Google',
         errors: {
             errorMsg: 'Tên đăng nhập hoặc mật khẩu không đúng',
             required: 'Trường bắt buộc',
@@ -24,6 +25,7 @@ export default {
         passwordConfirmPlaceholder: 'Xác nhận mật khẩu',
         signupButton: 'Đăng ký',
         signupButtonFacebook: 'Đăng ký với Facebook',
+        signupButtonGoogle: 'Đăng ký với Google',
         errors: {
             matchPass: 'Mật khẩu không khớp',
             required: 'Trường bắt buộc',

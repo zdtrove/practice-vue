@@ -11,6 +11,7 @@ export default {
         signupButton: 'sign up',
         cancelButton: 'cancel',
         loginButtonFacebook: 'Login with Facebook',
+        loginButtonGoogle: 'Login with Google',
         errors: {
             errorMsg: 'The username or the password are incorrect',
             required: 'Required',
@@ -25,6 +26,7 @@ export default {
         signupButton: 'sign up',
         cancelButton: 'cancel',
         signupButtonFacebook: 'Signup with Facebook',
+        signupButtonGoogle: 'Signup with Google',
         errors: {
             matchPass: 'Password must match',
             required: 'Required',

@@ -20,6 +20,10 @@
                                 <p v-for="(err, index) in errorFbMsg" v-bind:key="index">{{ err[0] }}</p>
                                 <v-icon class="iconDelete" @click="errorFb = !errorFb">delete</v-icon>
                             </v-alert>
+                            <v-alert color="error" :value="errorGg">
+                                <p v-for="(err, index) in errorGgMsg" v-bind:key="index">{{ err[0] }}</p>
+                                <v-icon class="iconDelete" @click="errorGg = !errorGg">delete</v-icon>
+                            </v-alert>
                             <v-text-field 
                                 v-model="email"
                                 :label="$t('signup.usernamePlaceholder')" 
@@ -48,7 +52,8 @@
                     <v-card-actions>
                         <v-spacer />
                         <v-btn color="primary" small @click.prevent="signup()" :disabled="!validForm">{{ $t('signup.signupButton') }}</v-btn>
-                        <v-btn color="primary" small @click="fbSignup">{{ $t('signup.signupButtonFacebook') }}</v-btn>
+                        <v-btn color="primary" small @click.prevent="signupFb()">{{ $t('signup.signupButtonFacebook') }}</v-btn>
+                        <v-btn color="primary" small id="signupGg">{{ $t('signup.signupButtonGoogle') }}</v-btn>
                     </v-card-actions>
                 </v-card>
             </v-col>
@@ -60,7 +65,7 @@
 <script>
     import DashboardLayout from '../../layouts/DashboardLayout';
     import Loading from '../../../components/loading';
-    import { TIMEOUT_MESSAGE } from '../../../constants';
+    import { TIMEOUT_MESSAGE, GOOGLE_ID } from '../../../constants';
     export default {
         name: 'SignupPage',
         components: {
@@ -75,6 +80,11 @@
             errorMsg: '',
             errorFb: false,
             errorFbMsg: '',
+            errorGg: false,
+            errorGgMsg: '',
+            email: '',
+            password: '',
+            password_confirm: '',
             rules: {
                 required: value => !!value || data.$t('signup.errors.required'),
                 email: value => {
@@ -82,54 +92,14 @@
                     return pattern.test(value) || data.$t('signup.errors.emailError');
                 },
                 min: value => value.length >= 6 || data.$t('signup.errors.minPass')
-            },
-            email: '',
-            password: '',
-            password_confirm: ''
+            }
         }),
         computed: {
             matchPasword() {
                 return () => (this.password === this.password_confirm) || this.$t('signup.errors.matchPass');
-            },
+            }
         },
         methods: {
-            async fbSignup() {
-                if (this.$store.getters.isLoggedIn) {
-                    this.$router.push('/profile');
-                } else {
-                    new Promise(() => {
-                        window.FB.login(response => {
-                            this.loading = true;
-                            if (response.authResponse) {
-                                window.FB.api('/me', 'GET', { fields: 'id,name,email' }, user => {
-                                    this.$store.dispatch("SIGNUP_FACEBOOK", {
-                                        headers: {
-                                            'Access-Control-Allow-Origin': '*',
-                                        },
-                                        type: 'profile',
-                                        register_type: 'facebook',
-                                        facebook: user.id,
-                                        email: user.email,
-                                        name: user.name,
-                                        azure_token: response.authResponse.accessToken
-                                    }).then(() => {
-                                        this.loading = false;
-                                        this.$router.push('/profile');
-                                    })
-                                    .catch((error) => {
-                                        this.loading = false;
-                                        this.errorFbMsg = error.data.error.message;
-                                        this.errorFb = true;
-                                        setTimeout(() => {
-                                            this.errorFb = false;
-                                        }, TIMEOUT_MESSAGE);
-                                    });
-                                });
-                            }
-                        });
-                    });
-                }
-            },
             signup() {
                 this.loading = true;
                 this.$store.dispatch("SIGNUP", {
@@ -159,13 +129,78 @@
                         this.error = false;
                     }, TIMEOUT_MESSAGE);
                 });
+            },
+            async signupFb() {
+                if (this.$store.getters.isLoggedIn) {
+                    this.$router.push('profile');
+                } else {
+                    window.FB.login(response => {
+                        this.loading = true;
+                        if (response.authResponse) {
+                            window.FB.api('/me', 'GET', { fields: 'id,name,email' }, user => {
+                                this.$store.dispatch("SIGNUP_FACEBOOK", {
+                                    headers: {
+                                        'Access-Control-Allow-Origin': '*',
+                                    },
+                                    type: 'profile',
+                                    register_type: 'facebook',
+                                    facebook: user.id,
+                                    email: user.email,
+                                    name: user.name,
+                                    azure_token: response.authResponse.accessToken
+                                }).then(() => {
+                                    this.loading = false;
+                                    this.$router.push('profile');
+                                })
+                                .catch(error => {
+                                    this.loading = false;
+                                    this.errorFbMsg = error.data.error.message;
+                                    this.errorFb = true;
+                                    setTimeout(() => {
+                                        this.errorFb = false;
+                                    }, TIMEOUT_MESSAGE);
+                                });
+                            });
+                        }
+                    });
+                }
             }
         },
         created() {
             this.$emit(`update:layout`, DashboardLayout);
-            if (this.$store.getters.isLoggedIn) {
-                this.$router.push('/profile');
-            }
+        },
+        mounted() {
+            let ref = this;
+            window.gapi.load('auth2', () => {
+                window.auth2 = window.gapi.auth2.init({
+                    client_id: GOOGLE_ID
+                });
+                window.auth2.attachClickHandler(document.getElementById('signupGg'), {}, googleUser => {
+                    ref.loading = true;
+                    ref.$store.dispatch("SIGNUP_GOOGLE", {
+                        headers: {
+                            'Access-Control-Allow-Origin': '*'
+                        },
+                        type: 'profile',
+                        register_type: 'google',
+                        google: googleUser.getBasicProfile().getId(),
+                        email: googleUser.getBasicProfile().getEmail(),
+                        name: googleUser.getBasicProfile().getName(),
+                        azure_token: googleUser.getAuthResponse('access_token').access_token
+                    }).then(() => {
+                        ref.loading = false;
+                        ref.$router.push('profile');
+                    })
+                    .catch(error => {
+                        ref.loading = false;
+                        ref.errorGgMsg = error.data.error.message;
+                        ref.errorGg = true;
+                        setTimeout(() => {
+                            ref.errorFb = false;
+                        }, TIMEOUT_MESSAGE);
+                    });
+                });
+            });
         }
     };
 </script>

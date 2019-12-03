@@ -45,7 +45,7 @@
                 })
                 .then(() => {
                     this.loading = false;
-                    this.$router.push('/login');
+                    this.$router.push('login');
                 })
                 .catch(error => {
                     this.loading = false;
@@ -54,7 +54,7 @@
                     if (error.data.error.code === 401) {
                         this.$store.dispatch("LOGOUT_EXPIRED")
                         .then(() => {
-                            this.$router.push('/login');
+                            this.$router.push('login');
                         });
                     }
                 });
