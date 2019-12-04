@@ -16,14 +16,6 @@
                                 <p v-for="(err, index) in errorMsg" v-bind:key="index">{{ err[0] }}</p>
                                 <v-icon class="iconDelete" @click="error = !error">delete</v-icon>
                             </v-alert>
-                            <v-alert color="error" :value="errorFb">
-                                <p v-for="(err, index) in errorFbMsg" v-bind:key="index">{{ err[0] }}</p>
-                                <v-icon class="iconDelete" @click="errorFb = !errorFb">delete</v-icon>
-                            </v-alert>
-                            <v-alert color="error" :value="errorGg">
-                                <p v-for="(err, index) in errorGgMsg" v-bind:key="index">{{ err[0] }}</p>
-                                <v-icon class="iconDelete" @click="errorGg = !errorGg">delete</v-icon>
-                            </v-alert>
                             <v-text-field 
                                 v-model="email"
                                 :label="$t('signup.usernamePlaceholder')" 
@@ -52,8 +44,12 @@
                     <v-card-actions>
                         <v-spacer />
                         <v-btn color="primary" small @click.prevent="signup()" :disabled="!validForm">{{ $t('signup.signupButton') }}</v-btn>
-                        <v-btn color="primary" small @click.prevent="signupFb()">{{ $t('signup.signupButtonFacebook') }}</v-btn>
-                        <v-btn color="primary" small id="signupGg">{{ $t('signup.signupButtonGoogle') }}</v-btn>
+                        <v-btn v-if="social_list.includes('facebook')" color="primary" small @click.prevent="signupFb()">{{ $t('signup.signupButtonFacebook') }}</v-btn>
+                    </v-card-actions>
+                    <v-card-actions>
+                        <v-spacer />
+                        <v-btn v-if="social_list.includes('google')" color="primary" small id="signupGg">{{ $t('signup.signupButtonGoogle') }}</v-btn>
+                        <v-btn v-if="social_list.includes('uuid')" color="primary" small id="signupMs">{{ $t('signup.signupButtonMicrosoft') }}</v-btn>
                     </v-card-actions>
                 </v-card>
             </v-col>
@@ -65,7 +61,7 @@
 <script>
     import DashboardLayout from '../../layouts/DashboardLayout';
     import Loading from '../../../components/loading';
-    import { TIMEOUT_MESSAGE, GOOGLE_ID } from '../../../constants';
+    import { TIMEOUT_MESSAGE, GOOGLE_ID, MICROSOFT_CONFIG, SOCIAL_LIST } from '../../../constants';
     export default {
         name: 'SignupPage',
         components: {
@@ -78,13 +74,10 @@
             successMsg: '',
             error: false,
             errorMsg: '',
-            errorFb: false,
-            errorFbMsg: '',
-            errorGg: false,
-            errorGgMsg: '',
             email: '',
             password: '',
             password_confirm: '',
+            social_list: SOCIAL_LIST,
             rules: {
                 required: value => !!value || data.$t('signup.errors.required'),
                 email: value => {
@@ -138,7 +131,7 @@
                         this.loading = true;
                         if (response.authResponse) {
                             window.FB.api('/me', 'GET', { fields: 'id,name,email' }, user => {
-                                this.$store.dispatch("SIGNUP_FACEBOOK", {
+                                this.$store.dispatch("SIGNUP_SOCIAL", {
                                     headers: {
                                         'Access-Control-Allow-Origin': '*',
                                     },
@@ -154,10 +147,10 @@
                                 })
                                 .catch(error => {
                                     this.loading = false;
-                                    this.errorFbMsg = error.data.error.message;
-                                    this.errorFb = true;
+                                    this.errorMsg = error.data.error.message;
+                                    this.error = true;
                                     setTimeout(() => {
-                                        this.errorFb = false;
+                                        this.error = false;
                                     }, TIMEOUT_MESSAGE);
                                 });
                             });
@@ -170,6 +163,7 @@
             this.$emit(`update:layout`, DashboardLayout);
         },
         mounted() {
+            /* GOOGLE SIGNUP */
             let ref = this;
             window.gapi.load('auth2', () => {
                 window.auth2 = window.gapi.auth2.init({
@@ -177,7 +171,7 @@
                 });
                 window.auth2.attachClickHandler(document.getElementById('signupGg'), {}, googleUser => {
                     ref.loading = true;
-                    ref.$store.dispatch("SIGNUP_GOOGLE", {
+                    ref.$store.dispatch("SIGNUP_SOCIAL", {
                         headers: {
                             'Access-Control-Allow-Origin': '*'
                         },
@@ -193,10 +187,42 @@
                     })
                     .catch(error => {
                         ref.loading = false;
-                        ref.errorGgMsg = error.data.error.message;
-                        ref.errorGg = true;
+                        ref.errorMsg = error.data.error.message;
+                        ref.error = true;
                         setTimeout(() => {
-                            ref.errorFb = false;
+                            ref.error = false;
+                        }, TIMEOUT_MESSAGE);
+                    });
+                });
+            });
+
+            /* MICROSOFT SIGNUP */
+            let msObj = new window.Msal.UserAgentApplication(MICROSOFT_CONFIG);
+            document.getElementById('signupMs').addEventListener('click', function() {
+                msObj.acquireTokenPopup({ scopes: ["user.read"] }).then(function (msUser) {
+                    ref.loading = true;
+                    let uuid = msUser.uniqueId.replace(/-/g, '');
+                    ref.$store.dispatch("SIGNUP_SOCIAL", {
+                        headers: {
+                            'Access-Control-Allow-Origin': '*'
+                        },
+                        type: 'profile',
+                        register_type: 'uuid',
+                        uuid: uuid.replace(/^0+/, ''),
+                        email: msUser.account.userName,
+                        name: msUser.account.name,
+                        azure_token: msUser.accessToken
+                    })
+                    .then(() => {
+                        ref.loading = false;
+                        ref.$router.push('profile');
+                    })
+                    .catch(error => {
+                        ref.loading = false;
+                        ref.errorMsg = error.data.error.message;
+                        ref.error = true;
+                        setTimeout(() => {
+                            ref.error = false;
                         }, TIMEOUT_MESSAGE);
                     });
                 });

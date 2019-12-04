@@ -12,14 +12,6 @@
                                 {{ errorMsg }}
                                 <v-icon class="iconDelete" @click="error = !error">delete</v-icon>
                             </v-alert>
-                            <v-alert color="error" :value="errorFb">
-                                {{ errorFbMsg }}
-                                <v-icon class="iconDelete" @click="errorFb = !errorFb">delete</v-icon>
-                            </v-alert>
-                            <v-alert color="error" :value="errorGg">
-                                {{ errorGgMsg }}
-                                <v-icon class="iconDelete" @click="errorGg = !errorGg">delete</v-icon>
-                            </v-alert>
                             <v-text-field 
                                 v-model="email" 
                                 :label="$t('login.usernamePlaceholder')" 
@@ -41,8 +33,12 @@
                     <v-card-actions>
                         <v-spacer />
                         <v-btn color="primary" small @click.prevent="login()" :disabled="!validForm">{{ $t('login.loginButton') }}</v-btn>
-                        <v-btn color="primary" small @click.prevent="loginFb()">{{ $t('login.loginButtonFacebook') }}</v-btn>
-                        <v-btn color="primary" small id="loginGg">{{ $t('login.loginButtonGoogle') }}</v-btn>
+                        <v-btn v-if="social_list.includes('facebook')" color="primary" small @click.prevent="loginFb()">{{ $t('login.loginButtonFacebook') }}</v-btn>
+                    </v-card-actions>
+                    <v-card-actions>
+                        <v-spacer />
+                        <v-btn v-if="social_list.includes('google')" color="primary" small id="loginGg">{{ $t('login.loginButtonGoogle') }}</v-btn>
+                        <v-btn v-if="social_list.includes('uuid')" color="primary" small id="loginMs">{{ $t('login.loginButtonMicrosoft') }}</v-btn>
                     </v-card-actions>
                 </v-card>
             </v-col>
@@ -54,7 +50,7 @@
 <script>
     import DashboardLayout from '../../layouts/DashboardLayout';
     import Loading from '../../../components/loading';
-    import { TIMEOUT_MESSAGE, GOOGLE_ID } from '../../../constants';
+    import { TIMEOUT_MESSAGE, GOOGLE_ID, MICROSOFT_CONFIG, SOCIAL_LIST } from '../../../constants';
     export default {
         name: 'LoginPage',
         components: {
@@ -65,19 +61,16 @@
             validForm: true,
             error: false,
             errorMsg: '',
-            errorFb: false,
-            errorFbMsg: '',
-            errorGg: false,
-            errorGgMsg: '',
+            email: '',
+            password: '',
+            social_list: SOCIAL_LIST,
             rules: {
                 required: value => !!value || data.$t('login.errors.required'),
                 email: value => {
                     const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/;
                     return pattern.test(value) || data.$t('login.errors.emailError');
                 }
-            },
-            email: '',
-            password: ''
+            }
         }),
         methods: {
             login() {
@@ -108,7 +101,7 @@
                 window.FB.login(response => {
                     this.loading = true;
                     if (response.authResponse) {
-                        this.$store.dispatch("LOGIN_FACEBOOK", {
+                        this.$store.dispatch("LOGIN", {
                             headers: {
                                 'Access-Control-Allow-Origin': '*',
                             },
@@ -121,10 +114,10 @@
                         })
                         .catch(error => {
                             this.loading = false;
-                            this.errorFbMsg = error.data.error.message;
-                            this.errorFb = true;
+                            this.errorMsg = error.data.error.message;
+                            this.error = true;
                             setTimeout(() => {
-                                this.errorFb = false;
+                                this.error = false;
                             }, TIMEOUT_MESSAGE);
                         });
                     }
@@ -135,6 +128,7 @@
             this.$emit(`update:layout`, DashboardLayout);
         },
         mounted() {
+            /* GOOGLE LOGIN */
             let ref = this;
             window.gapi.load('auth2', () => {
                 window.auth2 = window.gapi.auth2.init({
@@ -142,7 +136,7 @@
                 });
                 window.auth2.attachClickHandler(document.getElementById('loginGg'), {}, googleUser => {
                     ref.loading = true;
-                    ref.$store.dispatch("LOGIN_GOOGLE", {
+                    ref.$store.dispatch("LOGIN", {
                         headers: {
                             'Access-Control-Allow-Origin': '*'
                         },
@@ -155,10 +149,37 @@
                     })
                     .catch(error => {
                         ref.loading = false;
-                        ref.errorGgMsg = error.data.error.message;
-                        ref.errorGg = true;
+                        ref.errorMsg = error.data.error.message;
+                        ref.error = true;
                         setTimeout(() => {
-                            ref.errorGg = false;
+                            ref.error = false;
+                        }, TIMEOUT_MESSAGE);
+                    });
+                });
+            });
+            /* MICROSOFT LOGIN */
+            let msObj = new window.Msal.UserAgentApplication(MICROSOFT_CONFIG);
+            document.getElementById('loginMs').addEventListener('click', function() {
+                msObj.acquireTokenPopup({ scopes: ["user.read"] }).then(function (msUser) {
+                    ref.loading = true;
+                    ref.$store.dispatch("LOGIN", {
+                        headers: {
+                            'Access-Control-Allow-Origin': '*'
+                        },
+                        type: 'profile',
+                        login_type: 'uuid',
+                        azure_token: msUser.accessToken
+                    })
+                    .then(() => {
+                        ref.loading = false;
+                        ref.$router.push('profile');
+                    })
+                    .catch(error => {
+                        ref.loading = false;
+                        ref.errorMsg = error.data.error.message;
+                        ref.error = true;
+                        setTimeout(() => {
+                            ref.error = false;
                         }, TIMEOUT_MESSAGE);
                     });
                 });

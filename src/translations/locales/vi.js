@@ -12,6 +12,7 @@ export default {
         cancelButton: 'Hủy',
         loginButtonFacebook: 'Đăng nhập bằng Facebook',
         loginButtonGoogle: 'Đăng nhập bằng Google',
+        loginButtonMicrosoft: 'Đăng nhập bằng Microsoft',
         errors: {
             errorMsg: 'Tên đăng nhập hoặc mật khẩu không đúng',
             required: 'Trường bắt buộc',
@@ -26,6 +27,7 @@ export default {
         signupButton: 'Đăng ký',
         signupButtonFacebook: 'Đăng ký với Facebook',
         signupButtonGoogle: 'Đăng ký với Google',
+        signupButtonMicrosoft: 'Đăng ký với Microsoft',
         errors: {
             matchPass: 'Mật khẩu không khớp',
             required: 'Trường bắt buộc',

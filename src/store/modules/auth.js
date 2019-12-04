@@ -38,42 +38,6 @@ export default {
                 });
             });
         },
-        LOGIN_FACEBOOK: ({commit}, payload) => {
-            return new Promise((resolve, reject) => {
-                axios.post(`account/login`, payload)
-                .then(({data, status}) => {
-                    if (status === 200) {
-                        const token = data.data.token;
-                        localStorage.setItem('token', token);
-                        commit('auth_success', token);
-                        resolve(true);
-                    }
-                })
-                .catch(error => {
-                    commit('auth_error');
-                    localStorage.removeItem('token');
-                    reject(error.response);
-                });
-            });
-        },
-        LOGIN_GOOGLE: ({commit}, payload) => {
-            return new Promise((resolve, reject) => {
-                axios.post(`account/login`, payload)
-                .then(({data, status}) => {
-                    if (status === 200) {
-                        const token = data.data.token;
-                        localStorage.setItem('token', token);
-                        commit('auth_success', token);
-                        resolve(true);
-                    }
-                })
-                .catch(error => {
-                    commit('auth_error');
-                    localStorage.removeItem('token');
-                    reject(error.response);
-                });
-            });
-        },
         SIGNUP: ({commit}, payload) => {
             return new Promise((resolve, reject) => {
                 axios.post(`account/register`, payload)
@@ -89,24 +53,7 @@ export default {
                 });
             });
         },
-        SIGNUP_FACEBOOK: ({commit}, payload) => {
-            return new Promise((resolve, reject) => {
-                axios.post(`account/register`, payload)
-                .then(({data, status}) => {
-                    if (status === 201) {
-                        const token = data.data.token;
-                        localStorage.setItem('token', token);
-                        commit('auth_success', token);
-                        resolve(data);
-                    }
-                })
-                .catch(error => {
-                    commit('auth_error');
-                    reject(error.response);
-                });
-            });
-        },
-        SIGNUP_GOOGLE: ({commit}, payload) => {
+        SIGNUP_SOCIAL: ({commit}, payload) => {
             return new Promise((resolve, reject) => {
                 axios.post(`account/register`, payload)
                 .then(({data, status}) => {
