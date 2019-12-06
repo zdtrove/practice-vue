@@ -5,10 +5,9 @@
             <v-btn text to="/"><v-toolbar-title>WANTEDLY</v-toolbar-title></v-btn>
             <v-spacer></v-spacer>
             <v-btn text><LanguagePicker /></v-btn>
-            <v-btn v-if="!isLoggedIn" text to="/signup">{{ $t('headerSignUp') }}</v-btn>
-            <v-btn v-if="!isLoggedIn" text to="/login">{{ $t('headerLogin') }}</v-btn>
+            <v-btn v-if="!isLoggedIn" text to="/account/signup">{{ $t('headerSignUp') }}</v-btn>
+            <v-btn v-if="!isLoggedIn" text to="/account/login">{{ $t('headerLogin') }}</v-btn>
             <v-btn v-if="isLoggedIn" @click="logout()" text>{{ $t('headerLogout') }}</v-btn>
-            <v-btn v-if="isLoggedIn" to="/profile" text>Profile</v-btn>
         </v-app-bar>
         <Loading v-if="loading" />
         <v-snackbar v-model="snackbar" :timeout="timeout" color="error" top="top">
@@ -45,7 +44,7 @@
                 })
                 .then(() => {
                     this.loading = false;
-                    this.$router.push('login');
+                    this.$router.push('/account/login');
                 })
                 .catch(error => {
                     this.loading = false;
@@ -54,7 +53,7 @@
                     if (error.data.error.code === 401) {
                         this.$store.dispatch("LOGOUT_EXPIRED")
                         .then(() => {
-                            this.$router.push('login');
+                            this.$router.push('/account/login');
                         });
                     }
                 });

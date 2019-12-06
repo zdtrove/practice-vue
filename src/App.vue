@@ -19,7 +19,7 @@
         },
         created() {
             if (this.$store.getters.isLoggedIn) {
-                this.$router.push('profile');
+                this.$router.push('/profile');
             }
             window.fbAsyncInit = function () {
                 window.FB.init({

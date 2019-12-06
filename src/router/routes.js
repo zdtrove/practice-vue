@@ -7,14 +7,24 @@ export default [
         component: HomePage
     },
     {
-        path: '/signup',
+        path: '/account/signup',
         name: 'signup',
-        component: () => import('../views/pages/signup')
+        component: () => import('../views/pages/account/signup')
     },
     {
-        path: '/login',
+        path: '/account/login',
         name: 'login',
-        component: () => import('../views/pages/login')
+        component: () => import('../views/pages/account/login')
+    },
+    {
+        path: '/account/create-new-password',
+        name: 'newpass',
+        component: () => import('../views/pages/account/newpass')
+    },
+    {
+        path: '/account/active-account',
+        name: 'active',
+        component: () => import('../views/pages/account/active')
     },
     {
         path: '/profile',

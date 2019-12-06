@@ -32,9 +32,9 @@
                                 :rules="[rules.required, rules.min]"
                             />
                             <v-text-field 
-                                v-model="password_confirm"
+                                v-model="password_confirmation"
                                 :label="$t('signup.passwordConfirmPlaceholder')" 
-                                name="password_confirm" 
+                                name="password_confirmation" 
                                 prepend-icon="lock" 
                                 type="password"
                                 :rules="[rules.required, rules.min, matchPasword]"
@@ -44,12 +44,9 @@
                     <v-card-actions>
                         <v-spacer />
                         <v-btn color="primary" small @click.prevent="signup()" :disabled="!validForm">{{ $t('signup.signupButton') }}</v-btn>
-                        <v-btn v-if="social_list.includes('facebook')" color="primary" small @click.prevent="signupFb()">{{ $t('signup.signupButtonFacebook') }}</v-btn>
-                    </v-card-actions>
-                    <v-card-actions>
-                        <v-spacer />
-                        <v-btn v-if="social_list.includes('google')" color="primary" small id="signupGg">{{ $t('signup.signupButtonGoogle') }}</v-btn>
-                        <v-btn v-if="social_list.includes('uuid')" color="primary" small id="signupMs">{{ $t('signup.signupButtonMicrosoft') }}</v-btn>
+                        <v-btn v-if="social_list.includes('facebook')" color="#4267b2" dark small id="signupFb" @click.prevent="signupFb()">{{ $t('signup.signupButtonFacebook') }}</v-btn>
+                        <v-btn v-if="social_list.includes('google')" color="#4285F4" dark small id="signupGg">{{ $t('signup.signupButtonGoogle') }}</v-btn>
+                        <v-btn v-if="social_list.includes('uuid')" color="#0078d4" dark small id="signupMs">{{ $t('signup.signupButtonMicrosoft') }}</v-btn>
                     </v-card-actions>
                 </v-card>
             </v-col>
@@ -59,9 +56,9 @@
 </template>
 
 <script>
-    import DashboardLayout from '../../layouts/DashboardLayout';
-    import Loading from '../../../components/loading';
-    import { TIMEOUT_MESSAGE, GOOGLE_ID, MICROSOFT_CONFIG, SOCIAL_LIST } from '../../../constants';
+    import DashboardLayout from '../../../layouts/DashboardLayout';
+    import Loading from '../../../../components/loading';
+    import { TIMEOUT_MESSAGE, GOOGLE_ID, MICROSOFT_CONFIG, SOCIAL_LIST } from '../../../../constants';
     export default {
         name: 'SignupPage',
         components: {
@@ -76,7 +73,7 @@
             errorMsg: '',
             email: '',
             password: '',
-            password_confirm: '',
+            password_confirmation: '',
             social_list: SOCIAL_LIST,
             rules: {
                 required: value => !!value || data.$t('signup.errors.required'),
@@ -89,7 +86,7 @@
         }),
         computed: {
             matchPasword() {
-                return () => (this.password === this.password_confirm) || this.$t('signup.errors.matchPass');
+                return () => (this.password === this.password_confirmation) || this.$t('signup.errors.matchPass');
             }
         },
         methods: {
@@ -103,7 +100,7 @@
                     register_type: 'email',
                     email: this.email,
                     password: this.password,
-                    password_confirmation: this.password_confirm,
+                    password_confirmation: this.password_confirmation,
                     name: 'My Profile'
                 })
                 .then((result) => {
@@ -125,7 +122,7 @@
             },
             async signupFb() {
                 if (this.$store.getters.isLoggedIn) {
-                    this.$router.push('profile');
+                    this.$router.push('/profile');
                 } else {
                     window.FB.login(response => {
                         this.loading = true;
@@ -143,7 +140,7 @@
                                     azure_token: response.authResponse.accessToken
                                 }).then(() => {
                                     this.loading = false;
-                                    this.$router.push('profile');
+                                    this.$router.push('/profile');
                                 })
                                 .catch(error => {
                                     this.loading = false;
@@ -183,7 +180,7 @@
                         azure_token: googleUser.getAuthResponse('access_token').access_token
                     }).then(() => {
                         ref.loading = false;
-                        ref.$router.push('profile');
+                        ref.$router.push('/profile');
                     })
                     .catch(error => {
                         ref.loading = false;
@@ -200,6 +197,7 @@
             let msObj = new window.Msal.UserAgentApplication(MICROSOFT_CONFIG);
             document.getElementById('signupMs').addEventListener('click', function() {
                 msObj.acquireTokenPopup({ scopes: ["user.read"] }).then(function (msUser) {
+                    console.log(msUser);
                     ref.loading = true;
                     let uuid = msUser.uniqueId.replace(/-/g, '');
                     ref.$store.dispatch("SIGNUP_SOCIAL", {
@@ -215,7 +213,7 @@
                     })
                     .then(() => {
                         ref.loading = false;
-                        ref.$router.push('profile');
+                        ref.$router.push('/profile');
                     })
                     .catch(error => {
                         ref.loading = false;

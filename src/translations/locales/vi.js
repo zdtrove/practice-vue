@@ -3,16 +3,23 @@ export default {
     headerLogin: 'Đăng nhập',
     headerSignUp: 'Đăng ký',
     headerLogout: 'Đăng xuất',
+    newpassTitle: 'Tạo mới mật khẩu',
+    newpassSendButton: 'Gửi',
+    dialog: {
+        forgetPassword: 'Quên mật khẩu',
+        close: 'Hủy',
+        send: 'Gửi yêu cầu'
+    },
     login: {
         titleForm: 'Đăng nhập',
-        usernamePlaceholder: 'Tên đăng nhập',
+        usernamePlaceholder: 'Email đăng nhập',
         passwordPlaceholder: 'Mật khẩu',
         loginButton: 'Đăng nhập',
         signupButton: 'Đăng ký',
         cancelButton: 'Hủy',
-        loginButtonFacebook: 'Đăng nhập bằng Facebook',
-        loginButtonGoogle: 'Đăng nhập bằng Google',
-        loginButtonMicrosoft: 'Đăng nhập bằng Microsoft',
+        loginButtonFacebook: 'Facebook',
+        loginButtonGoogle: 'Google',
+        loginButtonMicrosoft: 'Microsoft',
         errors: {
             errorMsg: 'Tên đăng nhập hoặc mật khẩu không đúng',
             required: 'Trường bắt buộc',
